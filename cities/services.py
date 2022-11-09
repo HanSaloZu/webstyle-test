@@ -1,6 +1,28 @@
 from math import dist
 
+from decouple import config
+from requests.exceptions import RequestException
+from rest_framework.exceptions import APIException
+
+from cities.geocoder import Geocoder
 from cities.models import City
+
+
+def get_city_geodata(city_name):
+    geocoder = Geocoder(config("API_KEY"))
+
+    try:
+        geodata = geocoder.geocode_city(city_name)[0]
+
+        return {
+            "name": geodata["address"]["city"],
+            "latitude": geodata["lat"],
+            "longitude": geodata["lon"],
+        }
+    except RequestException as e:
+        raise APIException(e.response.json()["error"], e.response.status_code)
+    except KeyError:
+        raise APIException("Unable to geocode", 404)
 
 
 def create_city(name, latitude, longitude):
