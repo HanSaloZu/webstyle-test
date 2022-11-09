@@ -1,11 +1,11 @@
 from decouple import config
-from django.test import TestCase
 from requests.exceptions import HTTPError
 
 from cities.geocoder import Geocoder
+from utils.tests import SleepyTestCase
 
 
-class GeocoderTestCase(TestCase):
+class GeocoderTestCase(SleepyTestCase):
     def test_incorrect_city_name(self):
         geocoder = Geocoder(config("API_KEY"))
 
