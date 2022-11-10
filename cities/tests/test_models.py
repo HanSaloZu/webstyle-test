@@ -1,5 +1,6 @@
 from decimal import InvalidOperation
 
+from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
 
@@ -53,4 +54,38 @@ class CityModelTestCase(TestCase):
             name="Moscow",
             latitude=58.6612994,
             longitude=8000,
+        )
+
+    def test_empty_latitude(self):
+        self.assertRaises(
+            IntegrityError,
+            create_city,
+            name="Moscow",
+            latitude=None,
+            longitude=36.5873394,
+        )
+
+        self.assertRaises(
+            ValidationError,
+            create_city,
+            name="Moscow",
+            latitude="",
+            longitude=36.5873394,
+        )
+
+    def test_empty_longitude(self):
+        self.assertRaises(
+            IntegrityError,
+            create_city,
+            name="Moscow",
+            latitude=58.6612994,
+            longitude=None,
+        )
+
+        self.assertRaises(
+            ValidationError,
+            create_city,
+            name="Moscow",
+            latitude=58.6612994,
+            longitude="",
         )
