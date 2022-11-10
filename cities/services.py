@@ -42,3 +42,19 @@ def find_closest_city(cities, latitude, longitude):
             closest_city = city
 
     return closest_city
+
+
+def find_n_closest_cities(n, cities, latitude, longitude):
+    closest_cities = []
+    while n > 0 and cities.count() > 0:
+        closest_cities.append(
+            find_closest_city(
+                cities.all(),
+                latitude,
+                longitude,
+            )
+        )
+        cities = cities.all().exclude(name=closest_cities[-1].name)
+        n -= 1
+
+    return closest_cities
