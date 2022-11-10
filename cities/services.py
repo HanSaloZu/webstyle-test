@@ -2,7 +2,7 @@ from math import dist
 
 from decouple import config
 from requests.exceptions import RequestException
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, ParseError
 
 from cities.geocoder import Geocoder
 from cities.models import City
@@ -20,6 +20,8 @@ def get_city_geodata(city_name):
             "longitude": geodata["lon"],
         }
     except RequestException as e:
+        if e.response.status_code == 404:
+            raise ParseError(e.response.json()["error"], e.response.status_code)
         raise APIException(e.response.json()["error"], e.response.status_code)
     except KeyError:
         raise APIException("Unable to geocode", 404)

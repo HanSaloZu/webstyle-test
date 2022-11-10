@@ -1,5 +1,5 @@
 from django.test import TestCase
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import ParseError
 
 from cities.models import City
 from cities.services import (create_city, find_closest_city,
@@ -78,6 +78,6 @@ class GetCityGeodataTestCase(SleepyTestCase):
     def test_get_geodata_with_incorrect_city_name(self):
         try:
             get_city_geodata("Amogus")
-            self.fail("APIException not raised by get_city_geodata")
-        except APIException as e:
+            self.fail("ParseError not raised by get_city_geodata")
+        except ParseError as e:
             self.assertEqual(e.detail, "Unable to geocode")
