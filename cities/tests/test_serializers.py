@@ -1,6 +1,20 @@
 from django.test import TestCase
 
-from cities.serializers import CoordinatesSerializer
+from cities.serializers import CitySerializer, CoordinatesSerializer
+from cities.services import create_city
+
+
+class CitySerializerTestCase(TestCase):
+    def test_serializer_with_instance(self):
+        city = create_city("Berlin", 52.5170365, 13.3888599)
+        serializer = CitySerializer(instance=city)
+        data = serializer.data
+
+        self.assertEqual(len(data), 4)
+        self.assertEqual(data["id"], city.id)
+        self.assertEqual(data["name"], city.name)
+        self.assertEqual(data["latitude"], str(city.latitude))
+        self.assertEqual(data["longitude"], str(city.longitude))
 
 
 class CoordinatesSerializerTestCase(TestCase):
