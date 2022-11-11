@@ -24,7 +24,7 @@ def get_city_geodata(city_name):
             raise ParseError(e.response.json()["error"], e.response.status_code)
         raise APIException(e.response.json()["error"], e.response.status_code)
     except KeyError:
-        raise APIException("Unable to geocode", 404)
+        raise ParseError("Unable to geocode", 404)
 
 
 def create_city(name, latitude, longitude):
